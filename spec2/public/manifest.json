@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+    "name": "Data From",
+    "version": "1.0",
+    "description": "An extension that stores test data in a database.",
+    "permissions": [
+      "activeTab",
+      "http://localhost:3000/*"
+    ],
+    "action": {
+      "default_title": "12Lpa",
+      "default_popup": "index.html"
+    }
+}
