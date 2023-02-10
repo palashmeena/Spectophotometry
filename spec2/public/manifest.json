@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-    "name": "Data From",
+    "name": "Spectophotometry",
     "version": "1.0",
     "description": "An extension that stores test data in a database.",
     "permissions": [
@@ -8,7 +8,7 @@
       "http://localhost:3000/*"
     ],
     "action": {
-      "default_title": "12Lpa",
+      "default_title": "Proctoring",
       "default_popup": "index.html"
     }
 }

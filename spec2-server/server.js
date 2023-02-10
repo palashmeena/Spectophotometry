@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    validationCode: {
+    testValidationCode: {
         type: String,
         required: true,
     },
@@ -36,19 +36,68 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 
 app.post("/submit", (req, res) => {
-    console.log(req.body);
+    console.log(req.originalUrl);
 
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        validationCode: req.body.testValidationCode,
+        testValidationCode: req.body.testValidationCode,
     });
 
-    console.log(user);
-
     user.save()
-        .then((data) => res.status(200).json(data))
+        .then((doc) => {
+            console.log(doc);
+            res.status(200).json({ id: doc._id });
+        })
         .catch((error) => res.status(400).json(error));
+});
+
+app.post("/capture", async (req, res) => {
+    console.log("request recieved");
+    const { id, imageSrc, timeStamp } = req.body;
+    console.log(imageSrc);
+    console.log(timeStamp);
+    await User.findByIdAndUpdate(
+        id,
+        {
+            $push: { captures: { imageSrc: imageSrc, timeStamp: timeStamp } },
+        },
+        { overwrite: false, new: true },
+        function (err, doc) {
+            if (err) {
+                console.log(err);
+                res.status(400).json("Error while uploading image");
+            } else {
+                console.log("Updated User : ", doc.captures.length);
+                res.status(200).json("Image uploaded successfully");
+            }
+        }
+    ).clone();
+});
+
+app.get("/users", async (req, res) => {
+    User.find({}, { name: 1 }, function (err, allUsers) {
+        if (err) {
+            console.log(err);
+            res.status(400).json("Error while fetching users");
+        } else {
+            console.log(allUsers);
+            res.status(200).json({ allUsers: allUsers });
+        }
+    });
+});
+
+app.get("/user/:id/captures", async (req, res) => {
+    const { id } = req.params;
+    User.findById(id, { captures: 1 }, function (err, doc) {
+        if (err) {
+            console.log(err);
+            res.status(400).json("Error while fetching Captures");
+        } else {
+            console.log(doc);
+            res.status(200).json({ allCaptures: doc.captures });
+        }
+    });
 });
 
 const PORT = process.env.PORT || 5000;

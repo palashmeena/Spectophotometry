@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import FormPage from "./FormPage";
 import CameraPage from "./CameraPage";
+import AdminPage from "./AdminPage";
+import UserPage from "./UserPage";
 
 function App() {
     return (
@@ -14,6 +16,8 @@ function App() {
             <Routes>
                 <Route exact path="/" element={<FormPage />} />
                 <Route exact path="/camera" element={<CameraPage />} />
+                <Route exact path="/admin" element={<AdminPage />} />
+                <Route exact path="/user/:id" element={<UserPage />} />
             </Routes>
         </Router>
     );
